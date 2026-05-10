@@ -1,5 +1,5 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
+import { motion, useScroll, useSpring } from 'framer-motion'
+import { useRef, useState, useEffect } from 'react'
 import {
   ChevronDown,
   MessageCircle,
@@ -10,11 +10,14 @@ import {
   Clock,
   CreditCard,
   CheckCircle2,
-  Star
+  Star,
+  AlertCircle,
+  Building2,
+  ExternalLink
 } from 'lucide-react'
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 18 },
+  hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
 }
 
@@ -25,8 +28,8 @@ function Reveal({ children, className = '' }) {
       variants={fadeUp}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: '-100px' }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
@@ -34,13 +37,13 @@ function Reveal({ children, className = '' }) {
 }
 
 function Divider() {
-  return <hr className="my-20 border-white/[0.08] md:my-28" />
+  return <hr className="my-24 border-white/[0.05] md:my-32" />
 }
 
 function H1({ children }) {
   return (
     <Reveal>
-      <h1 className="text-4xl font-semibold leading-tight tracking-[-0.04em] text-white md:text-6xl">
+      <h1 className="text-5xl font-bold leading-tight tracking-[-0.05em] text-white md:text-7xl">
         {children}
       </h1>
     </Reveal>
@@ -50,7 +53,7 @@ function H1({ children }) {
 function H2({ children }) {
   return (
     <Reveal className="mt-14">
-      <h2 className="text-2xl font-semibold leading-tight tracking-[-0.03em] text-white md:text-4xl">
+      <h2 className="text-2xl font-bold leading-tight tracking-[-0.03em] text-white md:text-5xl">
         {children}
       </h2>
     </Reveal>
@@ -60,30 +63,30 @@ function H2({ children }) {
 function H3({ children }) {
   return (
     <Reveal className="mt-10">
-      <h3 className="text-lg font-semibold uppercase tracking-[0.18em] text-[#FF3B3B]">
+      <h3 className="text-lg font-bold uppercase tracking-[0.2em] text-[#FF3B3B]">
         {children}
       </h3>
     </Reveal>
   )
 }
 
-function P({ children }) {
+function P({ children, className = "" }) {
   return (
     <Reveal>
-      <p className="mt-6 text-[1.05rem] leading-8 text-[#F5F5F5] md:text-lg md:leading-9">
+      <p className={`mt-6 text-[1.1rem] leading-relaxed text-white/70 md:text-xl ${className}`}>
         {children}
       </p>
     </Reveal>
   )
 }
 
-function Bullets({ items }) {
+function Bullets({ items, className = "" }) {
   return (
     <Reveal>
-      <ul className="mt-6 space-y-3 text-[1.05rem] leading-8 text-[#F5F5F5] md:text-lg">
+      <ul className={`mt-6 space-y-4 text-[1.1rem] leading-relaxed text-white/70 md:text-lg ${className}`}>
         {items.map((item, index) => (
           <li key={index} className="flex gap-4">
-            <span className="mt-4 h-px w-5 shrink-0 bg-[#FF0000]" />
+            <CheckCircle2 size={20} className="mt-1 text-[#FF3B3B] shrink-0" />
             <span>{item}</span>
           </li>
         ))}
@@ -92,32 +95,136 @@ function Bullets({ items }) {
   )
 }
 
-function Numbered({ items }) {
+function ScrollProgressBar() {
+  const { scrollYProgress } = useScroll()
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  })
+
+  return <motion.div className="progress-bar" style={{ scaleX }} />
+}
+
+function ProblemSolutionBlock({ title, number, problem, solution }) {
   return (
-    <Reveal>
-      <ol className="mt-6 list-decimal space-y-3 pl-6 text-[1.05rem] leading-8 text-[#F5F5F5] md:text-lg">
-        {items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ol>
-    </Reveal>
+    <section className="mb-24 overflow-hidden rounded-[2rem] border border-white/[0.08]">
+      <div className="flex flex-col lg:flex-row min-h-[500px]">
+        {/* Problem Side */}
+        <div className="flex-1 bg-[#450a0a] p-10 md:p-16 relative">
+          <div className="absolute top-8 left-8 text-white/10 text-8xl font-black">{number}</div>
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                <AlertCircle size={20} className="text-white" />
+              </div>
+              <span className="text-white text-xs font-bold tracking-widest uppercase">The Problem</span>
+            </div>
+            <h2 className="text-2xl md:text-4xl font-bold text-white mb-8 tracking-tight">{title}</h2>
+            
+            <div className="space-y-6">
+              {problem.content.map((p, i) => <p key={i} className="text-white/80 text-lg leading-relaxed">{p}</p>)}
+              {problem.bullets && (
+                <ul className="space-y-4">
+                  {problem.bullets.map((b, i) => (
+                    <li key={i} className="flex gap-4 text-white/70">
+                      <div className="mt-2.5 h-1 w-4 shrink-0 bg-white/30" />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {problem.impact && (
+                <div className="mt-10 pt-10 border-t border-white/10">
+                  <span className="text-white/40 text-[10px] font-bold tracking-widest uppercase mb-4 block">Business Impact</span>
+                  <ul className="space-y-3">
+                    {problem.impact.map((imp, i) => (
+                      <li key={i} className="text-white/60 text-base italic leading-relaxed">— {imp}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Solution Side */}
+        <div className="flex-1 bg-[#0E9F6E] p-10 md:p-16 text-black">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center">
+              <CheckCircle2 size={20} className="text-black" />
+            </div>
+            <span className="text-black text-xs font-bold tracking-widest uppercase opacity-60">W3 Studio Solution</span>
+          </div>
+          <div className="space-y-6">
+            {solution.content.map((s, i) => <p key={i} className="text-black/80 text-lg font-medium leading-relaxed">{s}</p>)}
+            {solution.bullets && (
+              <ul className="space-y-4">
+                {solution.bullets.map((b, i) => (
+                  <li key={i} className="flex gap-4 text-black font-semibold">
+                    <ArrowRight size={20} className="mt-1 shrink-0 opacity-40" />
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {solution.outcome && (
+              <div className="mt-10 pt-10 border-t border-black/10">
+                <span className="text-black/40 text-[10px] font-bold tracking-widest uppercase mb-4 block">Outcome</span>
+                <ul className="space-y-2">
+                  {solution.outcome.map((out, i) => (
+                    <li key={i} className="text-black text-base leading-relaxed">• {out}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 
-function LabelBlock({ lines }) {
+function FloatingContact() {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsVisible(window.scrollY > 800)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
-    <Reveal>
-      <div className="mt-8 border-y border-white/[0.08] py-8 text-[1.05rem] leading-8 text-[#F5F5F5] md:text-lg md:leading-9">
-        {lines.map((line) => (
-          <p key={line}>{line}</p>
-        ))}
-      </div>
-    </Reveal>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0 }}
+      className="fixed bottom-8 right-8 z-[200] flex flex-col gap-3"
+    >
+      <a
+        href="https://wa.me/918086564212?text=Hello%20Shefin%2C%20we%20are%20interested%20in%20the%20digital%20transformation%20proposal%20for%20Binnaji%20Group."
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-14 h-14 rounded-full bg-[#FF3B3B] text-white flex items-center justify-center shadow-2xl hover:scale-110 transition-transform"
+      >
+        <MessageCircle size={24} />
+      </a>
+    </motion.div>
   )
 }
 
 function App() {
   const containerRef = useRef(null)
+
+  const subsidiaries = [
+    { name: 'Al-Ratqa Paper Bags Factory', desc: 'Premium manufacturing of paper-based packaging solutions.' },
+    { name: 'Bin Naji Printing Materials Company', desc: 'Industrial grade printing materials and distribution.' },
+    { name: 'TNA Integrated Advertising', desc: 'Strategic marketing and corporate communication services.' },
+    { name: 'Royal Card Wedding Cards', desc: 'Luxury stationery and bespoke wedding invitation design.' },
+    { name: 'Zincograph Factory', desc: 'Specialized industrial metalwork and mold production.' },
+    { name: 'Bin Naji Perfumes Company', desc: 'Premium fragrance production and luxury retail.' },
+  ]
 
   const trustItems = [
     { icon: Shield, label: 'Zero Risk', sub: 'Pay only on delivery' },
@@ -135,370 +242,341 @@ function App() {
 
   return (
     <main ref={containerRef} className="min-h-screen bg-[#0B0B0D] text-white overflow-x-hidden selection:bg-[#FF3B3B]/30">
-      <article className="mx-auto max-w-[900px] px-5 py-16 md:px-8 md:py-24">
+      <ScrollProgressBar />
+      <FloatingContact />
+
+      <article className="mx-auto max-w-[1200px] px-6 py-16 md:px-12 md:py-32">
         {/* ── Hero Section ── */}
-        <section className="relative flex min-h-[90vh] flex-col items-center justify-center text-center">
+        <section className="relative flex min-h-[85vh] flex-col items-center justify-center text-center mb-32">
           <Reveal>
-            <p className="mx-auto mb-10 w-fit border-y border-[#FF0000]/55 py-3 text-xs font-medium uppercase tracking-[0.38em] text-[#FF0000]">
+            <p className="mx-auto mb-10 w-fit border-y border-[#FF0000]/55 py-3 text-xs font-bold uppercase tracking-[0.4em] text-[#FF0000]">
               Website Modernization Proposal
             </p>
-            <h1 className="text-5xl font-semibold leading-[0.95] tracking-[-0.055em] text-white md:text-8xl">
+            <h1 className="text-6xl font-bold leading-[0.95] tracking-[-0.06em] text-white md:text-[9rem]">
               Binnaji Group
             </h1>
-            <p className="mt-8 text-xl font-light tracking-[-0.02em] text-[#F5F5F5] md:text-3xl">
-              Presented by W3 Studio
+            <p className="mt-12 text-2xl font-light tracking-[-0.02em] text-white/50 md:text-4xl">
+              Presented by <span className="text-white font-medium italic">W3 Studio</span>
             </p>
           </Reveal>
 
-          {/* ── Scroll indicator ── */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.5 }}
-            className="absolute bottom-4 flex flex-col items-center gap-4 cursor-default"
+            className="absolute bottom-4 flex flex-col items-center gap-4"
           >
-            <div className="relative group">
-              <div className="absolute -inset-2 bg-[#FF3B3B]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative w-7 h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-md flex flex-col items-center py-2 overflow-hidden shadow-2xl">
-                <motion.div
-                  animate={{
-                    y: [0, 16, 0],
-                    opacity: [0.4, 1, 0.4],
-                    scale: [1, 1.2, 1]
-                  }}
-                  transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-1.5 h-1.5 rounded-full bg-[#FF3B3B]"
-                  style={{ boxShadow: '0 0 10px #FF3B3B' }}
-                />
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-white/30 text-[8px] font-bold tracking-[0.4em] uppercase">
-                Scroll to Explore
-              </span>
+            <div className="w-7 h-12 rounded-full border border-white/10 flex justify-center p-2">
               <motion.div
-                animate={{ y: [0, 4, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <ChevronDown size={12} className="text-[#FF3B3B]/50" />
-              </motion.div>
+                animate={{ y: [0, 16, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-1 h-1 rounded-full bg-[#FF3B3B]"
+              />
             </div>
+            <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-white/30">Explore Proposal</span>
           </motion.div>
         </section>
 
-        <Divider />
-
-        <section>
+        {/* ── Overview ── */}
+        <section className="mb-40 max-w-[700px]">
           <H1>Proposal Overview</H1>
-          <LabelBlock
-            lines={[
-              'Prepared For: Binnaji Group – Kuwait',
-              'Prepared By: W3 Studio',
-              'Contact Person: Shefin – Founder & Creative Director',
-              'Email: shefinptr@gmail.com',
-              'WhatsApp: +91 8086564212',
-              'Project Timeline: 6–8 Weeks',
-              'Project Investment: 650 KWD (Domain & third-party charges excluded)',
-            ]}
-          />
+          <div className="mt-12 space-y-6">
+            {[
+              { l: 'Prepared For', v: 'Binnaji Group – Kuwait' },
+              { l: 'Contact Person', v: 'Shefin – Founder & Creative Director' },
+              { l: 'Email', v: 'shefinptr@gmail.com' },
+              { l: 'WhatsApp', v: '+91 8086564212' },
+              { l: 'Timeline', v: '6–8 Weeks' },
+            ].map((item) => (
+              <div key={item.l} className="flex justify-between border-b border-white/10 pb-4">
+                <span className="text-white/40 uppercase text-xs tracking-widest font-bold">{item.l}</span>
+                <span className="text-white font-medium">{item.v}</span>
+              </div>
+            ))}
+          </div>
         </section>
 
         <Divider />
 
-        <section>
-          <H1>Introduction</H1>
-          <P>Binnaji Group has established itself as a trusted and diversified industrial brand in Kuwait through manufacturing, printing, advertising, luxury stationery, packaging, and specialized production services.</P>
-          <P>The company’s physical presence, operational scale, and portfolio of subsidiary businesses clearly demonstrate a strong market position and long-standing credibility.</P>
-          <P>However, the current digital presence does not reflect the true scale, quality, professionalism, or premium positioning of the Binnaji Group.</P>
-          <P>Today, a company’s website is not just an online brochure.</P>
-          <P>It is:</P>
-          <Bullets
-            items={[
-              'A trust-building platform',
-              'A lead-generation system',
-              'A digital showroom',
-              'A representation of brand value',
-              'A sales tool working 24/7',
-            ]}
-          />
-          <P>For many potential clients, distributors, and corporate buyers, the website becomes the first impression of the company.</P>
-          <P>At the moment, the current website creates friction instead of confidence.</P>
-          <P>Our goal is to transform the Binnaji Group website into a modern, premium, bilingual corporate platform that properly showcases the company’s legacy, subsidiaries, manufacturing quality, and business scale.</P>
+        {/* ── Introduction ── */}
+        <section className="mb-40">
+          <div className="max-w-[800px]">
+            <H1>Introduction</H1>
+            <P>Binnaji Group has established itself as a trusted and diversified industrial brand in Kuwait through manufacturing, printing, advertising, luxury stationery, packaging, and specialized production services.</P>
+            <P>The company’s physical presence, operational scale, and portfolio of subsidiary businesses clearly demonstrate a strong market position and long-standing credibility.</P>
+            <P className="text-white font-semibold">However, the current digital presence does not reflect the true scale, quality, professionalism, or premium positioning of the Binnaji Group.</P>
+            <P>Today, a company’s website is not just an online brochure. It is a trust-building platform, a lead-generation system, and a representation of brand value working 24/7.</P>
+          </div>
+        </section>
+
+        {/* ── Subsidiary Grid ── */}
+        <section className="mb-40">
+          <Reveal>
+            <div className="flex items-center gap-4 mb-12">
+              <Building2 className="text-[#FF3B3B]" />
+              <h2 className="text-3xl font-bold uppercase tracking-tight">The Binnaji Ecosystem</h2>
+            </div>
+          </Reveal>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {subsidiaries.map((s, i) => (
+              <motion.div
+                key={s.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="group p-8 rounded-[2rem] bg-white/[0.03] border border-white/5 hover:border-[#FF3B3B]/30 hover:bg-white/[0.05] transition-all"
+              >
+                <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-[#FF3B3B]/20 group-hover:text-[#FF3B3B] transition-colors">
+                  <Star size={20} />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-4 leading-tight">{s.name}</h3>
+                <p className="text-white/40 text-sm leading-relaxed">{s.desc}</p>
+              </motion.div>
+            ))}
+          </div>
         </section>
 
         <Divider />
 
-        <section>
+        {/* ── Current Analysis ── */}
+        <section className="mb-32">
           <H1>Current Website Analysis</H1>
-          <P>
-            Current Website:{' '}
-            <a className="text-[#FF3B3B] underline decoration-[#FF0000]/40 underline-offset-4" href="http://binnaji.net/" target="_blank" rel="noopener noreferrer">
-              http://binnaji.net/
+          <div className="mt-12 p-8 rounded-2xl bg-[#FF3B3B]/5 border border-[#FF3B3B]/20 inline-flex items-center gap-6">
+            <div className="text-white/60">Current Platform:</div>
+            <a href="http://binnaji.net/" target="_blank" rel="noopener noreferrer" className="text-xl font-bold text-white flex items-center gap-2 hover:text-[#FF3B3B] transition-colors">
+              binnaji.net <ExternalLink size={18} />
             </a>
-          </P>
+          </div>
           <P>After reviewing the existing website structure, user experience, design, functionality, and technical implementation, we identified several areas that are silently affecting credibility, lead generation, and customer experience.</P>
         </section>
 
-        <Divider />
+        {/* ── Problems vs Solutions ── */}
+        <section className="mb-40 space-y-12">
+          <ProblemSolutionBlock
+            number="01"
+            title="Outdated Brand Presentation"
+            problem={{
+              content: [
+                "The current website design feels outdated and does not visually represent the premium quality of Binnaji Group’s products and services.",
+                "The business manufactures premium products like luxury wedding cards, paper bags, and perfumes, but the digital experience fails to communicate this excellence."
+              ],
+              bullets: ["Premium paper bags", "Luxury wedding cards", "Corporate branding materials", "Industrial printing", "Perfumes", "Metalwork and molds"],
+              impact: ["The business is not actively modernized", "Operations feel smaller than they are", "Product quality may not match expectations"]
+            }}
+            solution={{
+              content: [
+                "We will redesign the entire website with a premium modern visual identity and a clean luxury-focused design system inspired by international industrial groups."
+              ],
+              bullets: [
+                "Professional layout structure",
+                "High-quality product presentation",
+                "Strong visual hierarchy",
+                "Corporate-style branding"
+              ],
+              outcome: ["Legacy & Scale", "Manufacturing capability", "Professionalism", "International presence"]
+            }}
+          />
 
-        <section>
-          <H1>Key Business Problems & Their Impact</H1>
+          <ProblemSolutionBlock
+            number="02"
+            title="Non-Responsive Mobile Experience"
+            problem={{
+              content: ["The current website is not properly responsive. Users need to zoom manually, content overflows horizontally, and navigation becomes difficult on phones."],
+              bullets: ["Manual zooming required", "Broken layouts on small screens", "Difficult touch navigation"]
+            }}
+            solution={{
+              content: ["We will build the website using a modern mobile-first approach ensuring a perfect experience across all screen sizes."],
+              bullets: ["Smooth navigation on phones/tablets", "Improved readability", "Seamless user experience"],
+              outcome: ["Higher inquiry rates", "Better trust", "Higher Google rankings"]
+            }}
+          />
 
-          <H2>1. Outdated Brand Presentation</H2>
-          <H3>Current Situation</H3>
-          <P>The current website design feels outdated and does not visually represent the premium quality of Binnaji Group’s products and services.</P>
-          <P>The business manufactures:</P>
-          <Bullets items={['Premium paper bags', 'Luxury wedding cards', 'Corporate branding materials', 'Industrial printing products', 'Perfumes', 'Metalwork and molds']} />
-          <P>However, the current website experience does not communicate luxury, trust, or industrial excellence.</P>
-          <H3>Business Impact</H3>
-          <P>When visitors compare Binnaji Group with modern competitors, the website may unintentionally create the impression that:</P>
-          <Bullets items={['The business is not actively modernized', 'The company is less premium than competitors', 'The operations are smaller than they actually are', 'Product quality may not match expectations']} />
-          <P>This silently reduces trust before a customer even contacts the company.</P>
-          <H3>Our Solution</H3>
-          <P>We will redesign the entire website with:</P>
-          <Bullets items={['Premium modern visual identity', 'Clean luxury-focused design system', 'Professional layout structure', 'High-quality product presentation', 'Strong visual hierarchy', 'Corporate-style branding inspired by large industrial groups']} />
-          <P>The new website will visually communicate:</P>
-          <Bullets items={['Legacy', 'Scale', 'Manufacturing capability', 'Professionalism', 'Premium quality', 'International business presence']} />
+          <ProblemSolutionBlock
+            number="03"
+            title="Website Security & SSL Issues"
+            problem={{
+              content: ["The website runs on HTTP instead of HTTPS. Browsers display a 'Not Secure' warning, which significantly damages corporate credibility."],
+              impact: ["Reduced customer trust", "Lower search engine rankings", "Inquiry confidence drop"]
+            }}
+            solution={{
+              content: ["We will implement full SSL security and optimized hosting configuration."],
+              bullets: ["Secure HTTPS setup", "Modern security standards", "SSL certification management"],
+              outcome: ["Professionally compliant", "Search engine optimized", "Trusted platform"]
+            }}
+          />
 
-          <H2>2. Non-Responsive Mobile Experience</H2>
-          <H3>Current Situation</H3>
-          <P>The current website is not properly responsive.</P>
-          <P>On mobile devices:</P>
-          <Bullets items={['Users need to zoom manually', 'Content overflows horizontally', 'Navigation becomes difficult', 'Layout breaks on smaller screens']} />
-          <H3>Why This Is Important</H3>
-          <P>Today, most users discover businesses through mobile devices.</P>
-          <P>A poor mobile experience causes:</P>
-          <Bullets items={['Visitors leaving quickly', 'Lower inquiry rates', 'Reduced trust', 'Poor Google ranking performance']} />
-          <H3>Our Solution</H3>
-          <P>We will build the website using a modern mobile-first approach.</P>
-          <P>The new platform will:</P>
-          <Bullets items={['Work perfectly across all screen sizes', 'Provide smooth navigation on phones and tablets', 'Improve readability and usability', 'Create a seamless experience for all users']} />
-          <P>This ensures customers can easily browse products, view company information, and contact the sales team instantly.</P>
+          <ProblemSolutionBlock
+            number="04"
+            title="Lack of Strong Call-To-Actions"
+            problem={{
+              content: ["The current website lacks clear actions for visitors. Important triggers like WhatsApp communication, direct inquiry, and quote requests are missing or unclear."],
+              impact: ["Lost leads", "Reduced inquiries", "Missed opportunities"]
+            }}
+            solution={{
+              content: ["We will strategically place direct contact triggers throughout the journey."],
+              bullets: ["WhatsApp inquiry buttons", "Call Now triggers", "Request Quote forms", "Sticky contact options"],
+              outcome: ["Immediate customer connection", "Higher conversion rates"]
+            }}
+          />
 
-          <H2>3. Website Security & “Not Secure” Warning</H2>
-          <H3>Current Situation</H3>
-          <P>The website currently runs on HTTP instead of HTTPS.</P>
-          <P>Browsers display the website as:</P>
-          <P>“Not Secure”</P>
-          <H3>Business Impact</H3>
-          <P>This affects:</P>
-          <Bullets items={['Customer trust', 'Corporate credibility', 'Search engine rankings', 'Inquiry confidence']} />
-          <P>Modern users associate security warnings with outdated or unsafe websites.</P>
-          <H3>Our Solution</H3>
-          <P>We will implement:</P>
-          <Bullets items={['SSL security certificates', 'Secure HTTPS setup', 'Modern security standards', 'Optimized hosting configuration']} />
-          <P>The website will become:</P>
-          <Bullets items={['Secure', 'Trusted', 'Professionally compliant', 'Better optimized for search engines']} />
+          <ProblemSolutionBlock
+            number="05"
+            title="Confusing Navigation & User Flow"
+            problem={{
+              content: ["Several pages and links are repetitive, incorrectly linked, or lead to wrong sections (e.g., Perfume links connected to wedding cards)."],
+              bullets: ["Zincograph links redirecting incorrectly", "Broken equipment pages", "Confusing menu items"]
+            }}
+            solution={{
+              content: ["We will create a fully structured information architecture for the entire group."],
+              bullets: ["Clear navigation hierarchy", "Organized subsidiary structure", "Easy service discovery"],
+              outcome: ["Smooth user journeys", "Logical product categorization", "Better understanding of company structure"]
+            }}
+          />
 
-          <H2>4. Lack of Strong Call-To-Actions (CTA)</H2>
-          <H3>Current Situation</H3>
-          <P>The current website lacks clear actions for visitors.</P>
-          <P>Important customer actions such as:</P>
-          <Bullets items={['WhatsApp communication', 'Direct inquiry', 'Product quote requests', 'Phone call integration']} />
-          <P>are either missing, unclear, or not functioning properly.</P>
-          <H3>Business Impact</H3>
-          <P>Even interested customers may leave the website without contacting the company.</P>
-          <P>This results in:</P>
-          <Bullets items={['Lost leads', 'Reduced inquiries', 'Missed opportunities', 'Lower conversion rates']} />
-          <H3>Our Solution</H3>
-          <P>We will strategically place:</P>
-          <Bullets items={['WhatsApp inquiry buttons', 'Call Now buttons', 'Request Quote forms', 'Product inquiry systems', 'Sticky contact options', 'Quick lead capture forms']} />
-          <P>We can also create:</P>
-          <Bullets items={['Pre-filled WhatsApp templates', 'Product-based inquiry messages', 'Instant contact workflows']} />
-          <P>This makes it easier for customers to contact the correct department immediately.</P>
+          <ProblemSolutionBlock
+            number="06"
+            title="Weak Showcase of Subsidiaries"
+            problem={{
+              content: ["Binnaji Group operates multiple specialized companies, but the current website doesn't show their true strengths or unified group scale."],
+              bullets: ["Al-Ratqa Factory", "Bin Naji Printing", "TNA Advertising", "Royal Card", "Zincograph Factory", "Bin Naji Perfumes"]
+            }}
+            solution={{
+              content: ["We will create a 'Mother Brand' corporate structure where each subsidiary maintains its identity while strengthening the group."],
+              bullets: ["Dedicated subsidiary sections", "Premium presentation", "Product showcases"],
+              outcome: ["Group strength visibility", "Manufacturing scale perception"]
+            }}
+          />
 
-          <H2>5. Confusing Navigation & User Flow</H2>
-          <H3>Current Situation</H3>
-          <P>Several pages and navigation links are:</P>
-          <Bullets items={['Repetitive', 'Incorrectly linked', 'Confusing to users', 'Leading to wrong sections']} />
-          <P>Examples found:</P>
-          <Bullets items={['Zincograph links redirecting incorrectly', 'Perfume links connected to wedding card pages', 'Equipment pages not functioning', 'Multiple menu items leading to identical destinations']} />
-          <H3>Business Impact</H3>
-          <P>This creates confusion and frustration.</P>
-          <P>Visitors may:</P>
-          <Bullets items={['Leave the website quickly', 'Fail to understand company structure', 'Lose confidence in the business', 'Fail to discover important services']} />
-          <H3>Our Solution</H3>
-          <P>We will create a fully structured information architecture for the group.</P>
-          <P>The new website will include:</P>
-          <Bullets items={['Clear navigation hierarchy', 'Organized subsidiary structure', 'Easy service discovery', 'Smooth user journeys', 'Proper internal linking', 'Logical product categorization']} />
-          <P>Users will clearly understand:</P>
-          <Bullets items={['What Binnaji Group does', 'The role of each subsidiary', 'Which department fits their needs', 'How to contact the correct team']} />
+          <ProblemSolutionBlock
+            number="07"
+            title="Bilingual Experience Issues"
+            problem={{
+              content: ["The current website uses translation-based switching that creates inconsistent layouts and mixed language elements (e.g., Arabic labels in English mode)."],
+              impact: ["UI inconsistencies", "Translation errors", "Professionalism drop"]
+            }}
+            solution={{
+              content: ["We will develop a true bilingual system with native support for both English and Arabic RTL layouts."],
+              bullets: ["Proper Arabic RTL support", "Consistent English layouts", "Clean language switching"],
+              outcome: ["Professional multilingual presentation", "Better local/international experience"]
+            }}
+          />
 
-          <H2>6. Weak Showcase of Subsidiary Companies</H2>
-          <H3>Current Situation</H3>
-          <P>Binnaji Group operates multiple specialized companies:</P>
-          <Numbered items={['Al-Ratqa Paper Bags Factory', 'Bin Naji Printing Materials Company', 'TNA Integrated Advertising Services Company', 'Royal Card Wedding Cards Company', 'Zinkograph Factory', 'Bin Naji Perfumes Company']} />
-          <P>However, the current website does not properly showcase:</P>
-          <Bullets items={['Their strengths', 'Their scale', 'Their identity', 'Their products', 'Their expertise']} />
-          <H3>Business Impact</H3>
-          <P>Potential clients may not fully understand:</P>
-          <Bullets items={['The scale of operations', 'Manufacturing capability', 'Product diversity', 'Group strength']} />
-          <H3>Our Solution</H3>
-          <P>We will create a “Mother Brand” corporate structure inspired by premium enterprise groups.</P>
-          <P>The website will present Binnaji Group as a unified corporate ecosystem while allowing each subsidiary to maintain its own identity.</P>
-          <P>Each company will have:</P>
-          <Bullets items={['Dedicated sections', 'Premium presentation', 'Product showcases', 'Service highlights', 'Inquiry systems', 'Visual branding consistency']} />
+          <ProblemSolutionBlock
+            number="08"
+            title="Poor Product Presentation"
+            problem={{
+              content: ["Products currently lack clear information, use outdated imagery, and do not showcase quality properly, especially in Perfumes and Paper bags."],
+              impact: ["Reduced perceived value", "Lower customer confidence", "Weak brand positioning"]
+            }}
+            solution={{
+              content: ["We will create a modern Digital Showroom with high-quality visuals and specifications."],
+              bullets: ["High-quality visuals", "Product specifications", "Category organization"],
+              outcome: ["Digital Showroom experience", "Higher inquiry conversion"]
+            }}
+          />
 
-          <H2>7. Bilingual Experience Issues</H2>
-          <H3>Current Situation</H3>
-          <P>The current website uses translation-based switching that creates:</P>
-          <Bullets items={['Inconsistent layouts', 'Mixed language elements', 'Translation errors', 'UI inconsistencies']} />
-          <H3>Business Impact</H3>
-          <P>This affects professionalism and creates confusion for both local and international visitors.</P>
-          <H3>Our Solution</H3>
-          <P>We will develop a true bilingual system using modern standards.</P>
-          <P>Benefits:</P>
-          <Bullets items={['Proper Arabic RTL support', 'Consistent English layouts', 'Unified design system', 'Clean language switching', 'Better user experience', 'Professional multilingual presentation']} />
-          <P>The design will remain visually consistent in both languages.</P>
-
-          <H2>8. Poor Product Presentation</H2>
-          <H3>Current Situation</H3>
-          <P>Several products currently:</P>
-          <Bullets items={['Lack clear information', 'Use outdated imagery', 'Do not showcase quality properly', 'Lack product specifications', 'Have no strong inquiry options']} />
-          <H3>Business Impact</H3>
-          <P>Premium products require premium presentation.</P>
-          <P>Weak presentation reduces:</P>
-          <Bullets items={['Perceived value', 'Customer confidence', 'Inquiry conversion', 'Brand positioning']} />
-          <H3>Our Solution</H3>
-          <P>We will create modern product showcase systems with:</P>
-          <Bullets items={['High-quality visuals', 'Product details', 'Clean layouts', 'Category organization', 'Product inquiry buttons', 'WhatsApp integration', 'Featured product sections', 'Promotional banners', 'New arrivals sections']} />
-          <P>The website will become a digital showroom instead of just an information page.</P>
-
-          <H2>9. Technical Errors & Broken Functionality</H2>
-          <H3>Current Situation</H3>
-          <P>Several technical issues exist:</P>
-          <Bullets items={['Registration system errors', 'SMTP/contact form failures', 'Broken links', 'Non-working pages', 'Incorrect routing', 'Footer inconsistencies']} />
-          <H3>Business Impact</H3>
-          <P>Technical errors create a negative impression and reduce trust.</P>
-          <H3>Our Solution</H3>
-          <P>We will rebuild the platform using modern development standards with:</P>
-          <Bullets items={['Stable architecture', 'Proper testing', 'Reliable inquiry systems', 'Error-free routing', 'Functional forms', 'Optimized performance']} />
+          <ProblemSolutionBlock
+            number="09"
+            title="Technical Errors & Maintenance"
+            problem={{
+              content: ["Several technical issues exist: registration errors, SMTP failures, broken links, and footer inconsistencies."],
+              impact: ["Negative brand impression", "Unreliable inquiry systems", "Perception of inactive business"]
+            }}
+            solution={{
+              content: ["We will rebuild the platform using modern, stable development standards."],
+              bullets: ["Stable architecture", "Reliable inquiry systems", "Error-free routing"],
+              outcome: ["Professional reliability", "Optimized performance"]
+            }}
+          />
         </section>
 
         <Divider />
 
-        <section>
-          <H1>Our Vision For Binnaji Group</H1>
-          <P>Our objective is not simply to redesign a website.</P>
-          <P>Our objective is to create a digital corporate presence that:</P>
-          <Bullets items={['Represents the true scale of the company', 'Builds trust instantly', 'Generates business inquiries', 'Showcases manufacturing quality', 'Strengthens brand authority', 'Improves customer experience', 'Creates a modern international image']} />
-          <P>The final platform will position Binnaji Group as:</P>
-          <Bullets items={['A premium industrial group', 'A trusted manufacturing partner', 'A modern enterprise brand', 'A scalable regional business']} />
+        {/* ── Rest of Content (Vision, Features, etc.) ── */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-32 mb-40">
+          <div>
+            <H1>Our Vision</H1>
+            <Bullets items={[
+              'Represents the true scale of the company',
+              'Builds trust instantly',
+              'Generates business inquiries',
+              'Showcases manufacturing quality',
+              'Strengthens brand authority',
+              'Improves customer experience',
+              'Creates a modern international image'
+            ]} />
+          </div>
+          <div>
+            <H1>Proposed Features</H1>
+            <H2>Corporate & Business</H2>
+            <Bullets items={[
+              'Modern premium UI/UX design',
+              'Fully responsive mobile-first',
+              'Bilingual Arabic & English support',
+              'Product showcase system',
+              'WhatsApp & Call integration',
+              'Admin content management'
+            ]} />
+          </div>
         </section>
 
-        <Divider />
-
-        <section>
-          <H1>Proposed Website Features</H1>
-          <H2>Corporate Features</H2>
-          <Bullets items={['Modern premium UI/UX design', 'Fully responsive mobile-first experience', 'Bilingual Arabic & English support', 'Secure HTTPS implementation', 'Fast-loading optimized pages', 'Modern navigation structure', 'SEO-friendly architecture']} />
-          <H2>Business Features</H2>
-          <Bullets items={['Product showcase system', 'Subsidiary company pages', 'WhatsApp integration', 'Click-to-call integration', 'Request Quote forms', 'Lead generation forms', 'Inquiry management system', 'Featured products section', 'Promotional banners']} />
-          <H2>Technical Features</H2>
-          <Bullets items={['Admin management system', 'Easy content management', 'Product management dashboard', 'Secure hosting setup', 'Optimized performance', 'SEO optimization setup', 'Structured architecture for scalability']} />
-        </section>
-
-        <Divider />
-
-        <section>
-          <H1>Website Structure Recommendation</H1>
-          <H2>Main Sections</H2>
-          <Bullets items={['Home', 'About Binnaji Group', 'Our Companies', 'Products & Services', 'Manufacturing Facilities', 'Portfolio / Showcase', 'Contact & Inquiry']} />
-          <H2>Subsidiary Sections</H2>
-          <P>Each subsidiary will have:</P>
-          <Bullets items={['Dedicated landing section', 'Product/service showcase', 'Inquiry options', 'Brand identity integration', 'Gallery system']} />
-        </section>
-
-        <Divider />
-
-        <section>
-          <H1>Design Direction</H1>
-          <P>The new website design will focus on:</P>
-          <Bullets items={['Luxury presentation', 'Industrial professionalism', 'Corporate trust', 'Clean layouts', 'Strong typography', 'Premium visuals', 'High-end user experience']} />
-          <P>The design language will be inspired by modern enterprise groups and premium manufacturing brands.</P>
-        </section>
-
-        <Divider />
-
-        <section>
+        <section className="mb-40">
           <H1>Project Process</H1>
-          <H2>Phase 1 – Research & Strategy</H2>
-          <Bullets items={['Brand structure analysis', 'Competitor research', 'UX planning', 'Website architecture planning']} />
-          <H2>Phase 2 – UI/UX Design</H2>
-          <Bullets items={['Homepage design', 'Corporate page layouts', 'Mobile responsive design', 'Arabic & English UI systems']} />
-          <H2>Phase 3 – Development</H2>
-          <Bullets items={['Frontend development', 'Backend integration', 'Inquiry system setup', 'Performance optimization']} />
-          <H2>Phase 4 – Testing & Optimization</H2>
-          <Bullets items={['Mobile testing', 'Speed optimization', 'Browser compatibility testing', 'SEO setup', 'Security implementation']} />
-          <H2>Phase 5 – Launch</H2>
-          <Bullets items={['Final deployment', 'HTTPS setup', 'Live optimization', 'Post-launch support']} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mt-16">
+            {[
+              { t: 'Research', d: 'Strategy & Brand Analysis' },
+              { t: 'UI/UX Design', d: 'Custom Modern Layouts' },
+              { t: 'Development', d: 'High Performance Build' },
+              { t: 'Testing', d: 'Quality & SEO Audit' },
+              { t: 'Launch', d: 'Deployment & Support' },
+            ].map((step, i) => (
+              <div key={step.t} className="p-8 rounded-2xl bg-white/[0.03] border border-white/5">
+                <div className="text-[#FF3B3B] font-bold mb-4">0{i+1}</div>
+                <div className="text-white font-bold mb-2">{step.t}</div>
+                <div className="text-white/40 text-xs">{step.d}</div>
+              </div>
+            ))}
+          </div>
         </section>
 
-        <Divider />
-
-        <section>
+        <section className="mb-40 text-center max-w-[800px] mx-auto">
           <H1>Estimated Timeline</H1>
-          <P>Estimated Completion Time:</P>
-          <P>6 – 8 Weeks</P>
-          <P>This includes:</P>
-          <Bullets items={['Design approval stages', 'Development', 'Testing', 'Optimization', 'Launch preparation']} />
+          <div className="mt-12 p-10 rounded-[3rem] border border-[#FF3B3B]/20 bg-[#FF3B3B]/5">
+            <div className="text-8xl font-bold text-white mb-4">6–8</div>
+            <div className="text-xl text-[#FF3B3B] font-bold uppercase tracking-[0.4em]">Weeks to Launch</div>
+          </div>
         </section>
-
-        <Divider />
-
-        <section>
-          <H1>Investment</H1>
-          <P>Project Cost:</P>
-          <P>650 KWD</P>
-          <P>Excluded:</P>
-          <P>Payment Terms:</P>
-          <P>No advance payment required.</P>
-          <P>Full payment after successful project completion and approval.</P>
-        </section>
-
-        <Divider />
-
-        <section>
-          <H1>Why W3 Studio</H1>
-          <P>At W3 Studio, we focus on creating modern digital experiences that help businesses:</P>
-          <Bullets items={['Build trust', 'Improve brand perception', 'Generate more inquiries', 'Present themselves professionally online']} />
-          <P>Our team includes:</P>
-          <Bullets items={['Experienced designers', 'Professional developers', 'Research-driven strategists', 'UI/UX specialists']} />
-          <P>We believe a website should not simply exist.</P>
-          <P>It should actively contribute to business growth.</P>
-        </section>
-
-        <Divider />
 
         {/* ── Conclusion Section (Beautiful Last Portion) ── */}
         <section className="mt-20">
           <Reveal>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FF3B3B]/30 bg-[#FF3B3B]/5 mb-10">
               <Star size={12} className="text-[#FF3B3B]" />
-              <span className="text-[#FF3B3B] text-[10px] font-bold tracking-widest uppercase">Conclusion</span>
+              <span className="text-[#FF3B3B] text-[10px] font-bold tracking-widest uppercase">Final Note</span>
             </div>
-
-            <h2 className="text-4xl font-semibold leading-tight tracking-[-0.04em] text-white md:text-7xl mb-10">
-              Your Brand Legacy <br />
-              <span className="text-[#FF3B3B] italic">Deserves Excellence</span>
+            
+            <h2 className="text-5xl font-bold leading-tight tracking-[-0.05em] text-white md:text-8xl mb-12">
+              The Missing Piece <br />
+              <span className="text-[#FF3B3B] italic">In Your Legacy</span>
             </h2>
 
-            <p className="text-[#A1A1AA] text-lg md:text-xl leading-relaxed mb-20 max-w-2xl">
-              Binnaji Group has built a foundation of manufacturing power. We are here to ensure
-              your digital presence reflects that same level of authority and prestige.
+            <p className="text-white/50 text-xl md:text-2xl leading-relaxed mb-24 max-w-3xl">
+              Binnaji Group has built a foundation of manufacturing power over decades. We are here to ensure 
+              your digital presence finally reflects that same level of authority and prestige.
             </p>
           </Reveal>
 
           {/* Path Forward Roadmap */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start mb-32">
-            <div className="space-y-10">
-              <h3 className="text-xl font-bold text-white mb-8 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#FF3B3B]/20 flex items-center justify-center">
-                  <div className="w-2 h-2 rounded-full bg-[#FF3B3B]" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start mb-40">
+            <div className="space-y-12">
+              <h3 className="text-2xl font-bold text-white mb-12 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#FF3B3B]/20 flex items-center justify-center">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#FF3B3B]" />
                 </div>
                 The Path Forward
               </h3>
-              <div className="space-y-8">
+              <div className="space-y-12">
                 {nextSteps.map((step, i) => (
                   <motion.div
                     key={step.title}
@@ -506,17 +584,17 @@ function App() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
-                    className="flex gap-6 group"
+                    className="flex gap-8 group"
                   >
                     <div className="flex flex-col items-center">
-                      <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-xs text-white/40 group-hover:border-[#FF3B3B]/50 group-hover:text-[#FF3B3B] transition-colors bg-white/5">
+                      <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-sm text-white/40 group-hover:border-[#FF3B3B]/50 group-hover:text-[#FF3B3B] transition-colors bg-white/5 font-bold">
                         {i + 1}
                       </div>
-                      {i !== nextSteps.length - 1 && <div className="w-px h-full bg-white/5 my-2" />}
+                      {i !== nextSteps.length - 1 && <div className="w-px h-full bg-white/5 my-4" />}
                     </div>
                     <div>
-                      <h4 className="text-white font-semibold group-hover:text-[#FF3B3B] transition-colors">{step.title}</h4>
-                      <p className="text-[#71717A] text-sm leading-relaxed">{step.desc}</p>
+                      <h4 className="text-xl font-bold text-white group-hover:text-[#FF3B3B] transition-colors mb-2">{step.title}</h4>
+                      <p className="text-white/40 leading-relaxed">{step.desc}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -524,36 +602,36 @@ function App() {
             </div>
 
             {/* Investment & Trust Card */}
-            <div className="relative pt-10">
-              <div className="absolute inset-0 bg-[#FF3B3B]/5 blur-[80px] -z-10" />
+            <div className="relative">
+              <div className="absolute inset-0 bg-[#FF3B3B]/10 blur-[120px] -z-10" />
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="bg-white/5 border border-white/10 p-10 md:p-12 rounded-[2.5rem] backdrop-blur-xl relative overflow-hidden"
+                className="bg-white/5 border border-white/10 p-12 md:p-16 rounded-[4rem] backdrop-blur-2xl relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 p-8 opacity-5">
-                  <CheckCircle2 size={160} className="text-[#FF3B3B]" />
+                <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
+                  <CheckCircle2 size={300} className="text-[#FF3B3B]" />
+                </div>
+                
+                <div className="mb-12">
+                  <div className="text-white/40 text-xs uppercase tracking-[0.3em] mb-4 font-bold">Project Investment</div>
+                  <div className="flex items-baseline gap-4">
+                    <span className="text-[6rem] font-bold text-white leading-none tracking-tighter">650</span>
+                    <span className="text-3xl font-bold text-[#FF3B3B] uppercase">KWD</span>
+                  </div>
+                  <div className="text-[#FF3B3B] text-xs mt-6 flex items-center gap-3 font-bold tracking-[0.2em] uppercase">
+                    <div className="w-2 h-2 rounded-full bg-[#FF3B3B] animate-pulse" />
+                    Zero Risk • Pay on Delivery
+                  </div>
                 </div>
 
-                <div className="mb-10">
-                  <div className="text-[#71717A] text-xs uppercase tracking-[0.2em] mb-3 font-bold">Total Investment</div>
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-6xl font-bold text-white tracking-tighter">650</span>
-                    <span className="text-2xl font-bold text-[#FF3B3B]">KWD</span>
-                  </div>
-                  <div className="text-[#FF3B3B] text-[10px] mt-4 flex items-center gap-2 font-bold tracking-wide uppercase">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#FF3B3B] animate-pulse" />
-                    Pay on Delivery
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 mb-10">
+                <div className="grid grid-cols-2 gap-6 mb-12">
                   {trustItems.map((item) => (
-                    <div key={item.label} className="p-4 rounded-2xl bg-white/5 border border-white/5">
-                      <item.icon size={16} className="text-[#FF3B3B] mb-2 opacity-70" />
-                      <div className="text-white text-[11px] font-bold">{item.label}</div>
-                      <div className="text-[#71717A] text-[9px] uppercase tracking-wider mt-0.5">{item.sub}</div>
+                    <div key={item.label} className="p-6 rounded-3xl bg-white/[0.03] border border-white/5">
+                      <item.icon size={20} className="text-[#FF3B3B] mb-3 opacity-60" />
+                      <div className="text-white text-sm font-bold">{item.label}</div>
+                      <div className="text-white/30 text-[10px] uppercase tracking-widest mt-1 font-bold">{item.sub}</div>
                     </div>
                   ))}
                 </div>
@@ -565,19 +643,19 @@ function App() {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-center gap-3 w-full h-14 rounded-2xl bg-[#FF3B3B] text-white font-bold text-sm shadow-[0_10px_30px_rgba(255,59,59,0.3)] group hover:bg-[#D62E2E] transition-all"
+                    className="flex items-center justify-center gap-4 w-full h-16 rounded-2xl bg-[#FF3B3B] text-white font-bold shadow-[0_20px_50px_rgba(255,59,59,0.3)] group hover:bg-[#D62E2E] transition-all"
                   >
-                    <MessageCircle size={18} />
+                    <MessageCircle size={20} />
                     <span>Start via WhatsApp</span>
-                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform opacity-50" />
                   </motion.a>
                   <motion.a
                     href="mailto:shefinptr@gmail.com"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-center gap-3 w-full h-14 rounded-2xl border border-white/10 bg-white/5 text-white font-bold text-sm hover:bg-white/10 transition-all"
+                    className="flex items-center justify-center gap-4 w-full h-16 rounded-2xl border border-white/10 bg-white/5 text-white font-bold hover:bg-white/10 transition-all"
                   >
-                    <Mail size={18} />
+                    <Mail size={20} />
                     <span>Email W3 Studio</span>
                   </motion.a>
                 </div>
@@ -590,23 +668,23 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center pt-24 border-t border-white/5"
+            className="text-center pt-32 border-t border-white/5 pb-20"
           >
-            <div className="inline-flex items-center gap-4 mb-10">
-              <div className="w-12 h-px bg-white/10" />
-              <div className="text-[#FF3B3B] text-[10px] font-bold tracking-widest uppercase italic">The W3 Studio Commitment</div>
-              <div className="w-12 h-px bg-white/10" />
+            <div className="inline-flex items-center gap-4 mb-12">
+              <div className="w-16 h-px bg-white/10" />
+              <div className="text-[#FF3B3B] text-xs font-bold tracking-[0.4em] uppercase italic opacity-70">W3 Studio Commitment</div>
+              <div className="w-16 h-px bg-white/10" />
             </div>
-            <p className="text-white text-xl md:text-2xl font-light italic mb-12 leading-relaxed">
-              "We don't just build websites; we architect digital legacies. <br className="hidden md:block" /> For Binnaji Group,
-              every pixel will be crafted to command respect."
+            <p className="text-white text-3xl md:text-5xl font-light italic mb-16 leading-tight tracking-tight max-w-4xl mx-auto">
+              "We don't just build websites; we architect digital legacies. For Binnaji Group,
+              every pixel will be crafted to <span className="text-white font-bold">command respect.</span>"
             </p>
             <div className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF3B3B] to-[#FF8080] mb-6 p-0.5 shadow-2xl">
-                <div className="w-full h-full rounded-full bg-[#0B0B0D] flex items-center justify-center text-lg font-bold">S</div>
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#FF3B3B] to-[#FF8080] mb-8 p-1 shadow-[0_20px_60px_rgba(255,59,59,0.4)]">
+                <div className="w-full h-full rounded-full bg-[#0B0B0D] flex items-center justify-center text-3xl font-black italic">S</div>
               </div>
-              <div className="text-white text-lg font-bold">Shefin</div>
-              <div className="text-[#71717A] text-xs tracking-[0.3em] uppercase mt-1">Founder & Creative Director</div>
+              <div className="text-white text-2xl font-bold">Shefin</div>
+              <div className="text-white/30 text-[10px] tracking-[0.5em] uppercase mt-2 font-black">Founder & Creative Director</div>
             </div>
           </motion.div>
         </section>
