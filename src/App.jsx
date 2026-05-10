@@ -149,32 +149,32 @@ function ProblemSolutionBlock({ title, number, problem, solution }) {
         </div>
 
         {/* Solution Side */}
-        <div className="flex-1 bg-[#0E9F6E] p-6 sm:p-10 md:p-16 text-black">
+        <div className="flex-1 bg-[#065F46] p-6 sm:p-10 md:p-16 text-white">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center">
-              <CheckCircle2 size={20} className="text-black" />
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+              <CheckCircle2 size={20} className="text-white" />
             </div>
-            <span className="text-black text-xs font-bold tracking-widest uppercase opacity-60">W3 Studio Strategic Solution</span>
+            <span className="text-white text-xs font-bold tracking-widest uppercase opacity-80">W3 Studio Strategic Solution</span>
           </div>
           <div className="space-y-6">
-            {solution.content && solution.content.map((s, i) => <p key={i} className="text-black/80 text-lg font-medium leading-relaxed">{s}</p>)}
+            {solution.content && solution.content.map((s, i) => <p key={i} className="text-white/90 text-lg font-medium leading-relaxed">{s}</p>)}
             {solution.bullets && (
               <ul className="space-y-4">
                 {solution.bullets.map((b, i) => (
-                  <li key={i} className="flex gap-4 text-black font-semibold">
-                    <ArrowRight size={20} className="mt-1 shrink-0 opacity-40" />
+                  <li key={i} className="flex gap-4 text-white font-semibold">
+                    <ArrowRight size={20} className="mt-1 shrink-0 opacity-60" />
                     <span>{b}</span>
                   </li>
                 ))}
               </ul>
             )}
-            {solution.contentAfter && solution.contentAfter.map((s, i) => <p key={i} className="text-black/80 text-lg font-medium leading-relaxed">{s}</p>)}
+            {solution.contentAfter && solution.contentAfter.map((s, i) => <p key={i} className="text-white/90 text-lg font-medium leading-relaxed">{s}</p>)}
             {solution.outcome && (
-              <div className="mt-10 pt-10 border-t border-black/10">
-                <span className="text-black/40 text-[10px] font-bold tracking-widest uppercase mb-4 block">Expected Business Outcome</span>
+              <div className="mt-10 pt-10 border-t border-white/20">
+                <span className="text-white/60 text-[10px] font-bold tracking-widest uppercase mb-4 block">Expected Business Outcome</span>
                 <div className="space-y-4">
                   {solution.outcome.map((out, i) => (
-                    <p key={i} className="text-black text-base leading-relaxed font-medium">{out}</p>
+                    <p key={i} className="text-white text-base leading-relaxed font-medium">{out}</p>
                   ))}
                 </div>
               </div>
@@ -221,7 +221,7 @@ function App() {
   const subsidiaries = [
     { name: 'Al-Ratqa Paper Bags Factory', desc: 'Premium manufacturing of paper-based packaging solutions.', logo: '/retqalogo.png' },
     { name: 'Bin Naji Printing Materials Company', desc: 'Industrial grade printing materials and distribution.', logo: '/printing.png' },
-    { name: 'TNA Integrated Advertising', desc: 'Strategic marketing and corporate communication services.', logo: '/tna.png' },
+    { name: 'TNA Integrated Advertising', desc: 'Advertising, strategic marketing and corporate communication services.', logo: '/tna.png' },
     { name: 'Royal Card Wedding Cards', desc: 'Luxury stationery and bespoke wedding invitation design.', logo: '/royalcard.png' },
     { name: 'Zincograph Factory', desc: 'Specialized industrial metalwork and mold production.', logo: '/zinco.png' },
     { name: 'Bin Naji Perfumes Company', desc: 'Premium fragrance production and luxury retail.', logo: '/perfume.jpg' },
@@ -642,6 +642,33 @@ function App() {
             }}
           />
         </section>
+
+        {/* Client Concerns / Custom Requirements */}
+        <section className="mb-40 max-w-[900px] mx-auto">
+          <Reveal>
+            <div className="p-8 md:p-12 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center backdrop-blur-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF3B3B]/10 rounded-full blur-[80px] -z-10 translate-x-1/2 -translate-y-1/2" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#0E9F6E]/10 rounded-full blur-[80px] -z-10 -translate-x-1/2 translate-y-1/2" />
+              
+              <MessageCircle size={40} className="text-[#FF3B3B] mx-auto mb-6 opacity-80" />
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 tracking-tight">Your Vision, Our Blueprint</h2>
+              <p className="text-white/70 text-[1.1rem] md:text-xl leading-relaxed mb-8 max-w-2xl mx-auto">
+                While our analysis covers the fundamental strategic improvements, we understand that Binnaji Group may have specific operational requirements, technical challenges, or unique business goals. We are fully open to discussing any concerns and tailoring this solution to perfectly align with your exact needs.
+              </p>
+              
+              <a
+                href="https://wa.me/918086564212?text=Hello%20Shefin%2C%20we%20have%20some%20additional%20requirements%20for%20the%20digital%20transformation."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-[#FF3B3B] hover:bg-[#D62E2E] text-white font-bold transition-all hover:scale-105 shadow-[0_10px_30px_rgba(255,59,59,0.2)]"
+              >
+                Discuss Additional Requirements
+                <ArrowRight size={18} />
+              </a>
+            </div>
+          </Reveal>
+        </section>
+
 
         <Divider />
 
