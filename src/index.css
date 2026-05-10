@@ -65,3 +65,38 @@ body {
   z-index: 100;
   box-shadow: 0 0 10px #FF3B3B;
 }
+
+/* PDF / Print Optimizations */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body, html, main {
+    background: #0B0B0D !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .progress-bar {
+    display: none !important;
+  }
+
+  section {
+    page-break-inside: avoid;
+  }
+
+  /* Force background colors for PDF */
+  .bg-\[\#450a0a\] {
+    background-color: #450a0a !important;
+  }
+  .bg-\[\#0E9F6E\] {
+    background-color: #0E9F6E !important;
+  }
+  .bg-white\/\[0\.03\] {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+  }
+  .border {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+}

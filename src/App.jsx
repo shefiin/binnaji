@@ -43,7 +43,7 @@ function Divider() {
 function H1({ children }) {
   return (
     <Reveal>
-      <h1 className="text-5xl font-bold leading-tight tracking-[-0.05em] text-white md:text-7xl">
+      <h1 className="text-3xl sm:text-5xl font-bold leading-tight tracking-[-0.05em] text-white md:text-7xl">
         {children}
       </h1>
     </Reveal>
@@ -111,8 +111,8 @@ function ProblemSolutionBlock({ title, number, problem, solution }) {
     <section className="mb-24 overflow-hidden rounded-[2rem] border border-white/[0.08]">
       <div className="flex flex-col lg:flex-row min-h-[500px]">
         {/* Problem Side */}
-        <div className="flex-1 bg-[#450a0a] p-10 md:p-16 relative">
-          <div className="absolute top-8 left-8 text-white/10 text-8xl font-black">{number}</div>
+        <div className="flex-1 bg-[#450a0a] p-6 sm:p-10 md:p-16 relative">
+          <div className="absolute top-8 left-8 text-white/10 text-6xl sm:text-8xl font-black">{number}</div>
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
@@ -121,7 +121,7 @@ function ProblemSolutionBlock({ title, number, problem, solution }) {
               <span className="text-white text-xs font-bold tracking-widest uppercase">The Problem</span>
             </div>
             <h2 className="text-2xl md:text-4xl font-bold text-white mb-8 tracking-tight">{title}</h2>
-            
+
             <div className="space-y-6">
               {problem.content.map((p, i) => <p key={i} className="text-white/80 text-lg leading-relaxed">{p}</p>)}
               {problem.bullets && (
@@ -149,7 +149,7 @@ function ProblemSolutionBlock({ title, number, problem, solution }) {
         </div>
 
         {/* Solution Side */}
-        <div className="flex-1 bg-[#0E9F6E] p-10 md:p-16 text-black">
+        <div className="flex-1 bg-[#0E9F6E] p-6 sm:p-10 md:p-16 text-black">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center">
               <CheckCircle2 size={20} className="text-black" />
@@ -200,7 +200,7 @@ function FloatingContact() {
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0 }}
-      className="fixed bottom-8 right-8 z-[200] flex flex-col gap-3"
+      className="fixed bottom-8 right-8 z-[200] flex flex-col gap-3 no-print"
     >
       <a
         href="https://wa.me/918086564212?text=Hello%20Shefin%2C%20we%20are%20interested%20in%20the%20digital%20transformation%20proposal%20for%20Binnaji%20Group."
@@ -218,12 +218,12 @@ function App() {
   const containerRef = useRef(null)
 
   const subsidiaries = [
-    { name: 'Al-Ratqa Paper Bags Factory', desc: 'Premium manufacturing of paper-based packaging solutions.' },
-    { name: 'Bin Naji Printing Materials Company', desc: 'Industrial grade printing materials and distribution.' },
-    { name: 'TNA Integrated Advertising', desc: 'Strategic marketing and corporate communication services.' },
-    { name: 'Royal Card Wedding Cards', desc: 'Luxury stationery and bespoke wedding invitation design.' },
-    { name: 'Zincograph Factory', desc: 'Specialized industrial metalwork and mold production.' },
-    { name: 'Bin Naji Perfumes Company', desc: 'Premium fragrance production and luxury retail.' },
+    { name: 'Al-Ratqa Paper Bags Factory', desc: 'Premium manufacturing of paper-based packaging solutions.', logo: '/retqalogo.png' },
+    { name: 'Bin Naji Printing Materials Company', desc: 'Industrial grade printing materials and distribution.', logo: '/printing.png' },
+    { name: 'TNA Integrated Advertising', desc: 'Strategic marketing and corporate communication services.', logo: '/tna.png' },
+    { name: 'Royal Card Wedding Cards', desc: 'Luxury stationery and bespoke wedding invitation design.', logo: '/royalcard.png' },
+    { name: 'Zincograph Factory', desc: 'Specialized industrial metalwork and mold production.', logo: '/zinco.png' },
+    { name: 'Bin Naji Perfumes Company', desc: 'Premium fragrance production and luxury retail.', logo: '/perfume.jpg' },
   ]
 
   const trustItems = [
@@ -249,13 +249,13 @@ function App() {
         {/* ── Hero Section ── */}
         <section className="relative flex min-h-[85vh] flex-col items-center justify-center text-center mb-32">
           <Reveal>
-            <p className="mx-auto mb-10 w-fit border-y border-[#FF0000]/55 py-3 text-xs font-bold uppercase tracking-[0.4em] text-[#FF0000]">
+            <p className="mx-auto mb-10 w-fit border-y border-[#FF0000]/55 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.4em] text-[#FF0000]">
               Website Modernization Proposal
             </p>
-            <h1 className="text-6xl font-bold leading-[0.95] tracking-[-0.06em] text-white md:text-[9rem]">
+            <h1 className="text-4xl sm:text-6xl font-bold leading-[0.95] tracking-[-0.06em] text-white md:text-[9rem]">
               Binnaji Group
             </h1>
-            <p className="mt-12 text-2xl font-light tracking-[-0.02em] text-white/50 md:text-4xl">
+            <p className="mt-8 sm:mt-12 text-lg sm:text-2xl font-light tracking-[-0.02em] text-white/50 md:text-4xl">
               Presented by <span className="text-white font-medium italic">W3 Studio</span>
             </p>
           </Reveal>
@@ -264,7 +264,7 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.5 }}
-            className="absolute bottom-4 flex flex-col items-center gap-4"
+            className="absolute bottom-4 flex flex-col items-center gap-4 no-print"
           >
             <div className="w-7 h-12 rounded-full border border-white/10 flex justify-center p-2">
               <motion.div
@@ -278,7 +278,7 @@ function App() {
         </section>
 
         {/* ── Overview ── */}
-        <section className="mb-40 max-w-[700px]">
+        <section className="mb-40 max-w-[700px] mx-auto relative">
           <H1>Proposal Overview</H1>
           <div className="mt-12 space-y-6">
             {[
@@ -300,7 +300,7 @@ function App() {
 
         {/* ── Introduction ── */}
         <section className="mb-40">
-          <div className="max-w-[800px]">
+          <div className="max-w-[800px] mx-auto">
             <H1>Introduction</H1>
             <P>Binnaji Group has established itself as a trusted and diversified industrial brand in Kuwait through manufacturing, printing, advertising, luxury stationery, packaging, and specialized production services.</P>
             <P>The company’s physical presence, operational scale, and portfolio of subsidiary businesses clearly demonstrate a strong market position and long-standing credibility.</P>
@@ -327,8 +327,8 @@ function App() {
                 transition={{ delay: i * 0.1 }}
                 className="group p-8 rounded-[2rem] bg-white/[0.03] border border-white/5 hover:border-[#FF3B3B]/30 hover:bg-white/[0.05] transition-all"
               >
-                <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-[#FF3B3B]/20 group-hover:text-[#FF3B3B] transition-colors">
-                  <Star size={20} />
+                <div className="w-20 h-20 rounded-xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-white/10 transition-colors overflow-hidden p-2">
+                  <img src={s.logo} alt={s.name} className="w-full h-full object-contain filter transition-all duration-500" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-4 leading-tight">{s.name}</h3>
                 <p className="text-white/40 text-sm leading-relaxed">{s.desc}</p>
@@ -340,7 +340,7 @@ function App() {
         <Divider />
 
         {/* ── Current Analysis ── */}
-        <section className="mb-32">
+        <section className="mb-32 mx-auto max-w-[900px]">
           <H1>Current Website Analysis</H1>
           <div className="mt-12 p-8 rounded-2xl bg-[#FF3B3B]/5 border border-[#FF3B3B]/20 inline-flex items-center gap-6">
             <div className="text-white/60">Current Platform:</div>
@@ -532,7 +532,7 @@ function App() {
               { t: 'Launch', d: 'Deployment & Support' },
             ].map((step, i) => (
               <div key={step.t} className="p-8 rounded-2xl bg-white/[0.03] border border-white/5">
-                <div className="text-[#FF3B3B] font-bold mb-4">0{i+1}</div>
+                <div className="text-[#FF3B3B] font-bold mb-4">0{i + 1}</div>
                 <div className="text-white font-bold mb-2">{step.t}</div>
                 <div className="text-white/40 text-xs">{step.d}</div>
               </div>
@@ -550,19 +550,19 @@ function App() {
 
         {/* ── Conclusion Section (Beautiful Last Portion) ── */}
         <section className="mt-20">
-          <Reveal>
+          <Reveal className="max-w-3xl mx-auto text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FF3B3B]/30 bg-[#FF3B3B]/5 mb-10">
               <Star size={12} className="text-[#FF3B3B]" />
               <span className="text-[#FF3B3B] text-[10px] font-bold tracking-widest uppercase">Final Note</span>
             </div>
-            
-            <h2 className="text-5xl font-bold leading-tight tracking-[-0.05em] text-white md:text-8xl mb-12">
+
+            <h2 className="text-3xl sm:text-5xl font-bold leading-tight tracking-[-0.05em] text-white md:text-8xl mb-12">
               The Missing Piece <br />
               <span className="text-[#FF3B3B] italic">In Your Legacy</span>
             </h2>
 
             <p className="text-white/50 text-xl md:text-2xl leading-relaxed mb-24 max-w-3xl">
-              Binnaji Group has built a foundation of manufacturing power over decades. We are here to ensure 
+              Binnaji Group has built a foundation of manufacturing power over decades. We are here to ensure
               your digital presence finally reflects that same level of authority and prestige.
             </p>
           </Reveal>
@@ -608,30 +608,30 @@ function App() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="bg-white/5 border border-white/10 p-12 md:p-16 rounded-[4rem] backdrop-blur-2xl relative overflow-hidden"
+                className="bg-white/5 border border-white/10 p-6 sm:p-10 md:p-16 rounded-[2.5rem] sm:rounded-[4rem] backdrop-blur-2xl relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
                   <CheckCircle2 size={300} className="text-[#FF3B3B]" />
                 </div>
-                
-                <div className="mb-12">
-                  <div className="text-white/40 text-xs uppercase tracking-[0.3em] mb-4 font-bold">Project Investment</div>
-                  <div className="flex items-baseline gap-4">
-                    <span className="text-[6rem] font-bold text-white leading-none tracking-tighter">650</span>
-                    <span className="text-3xl font-bold text-[#FF3B3B] uppercase">KWD</span>
+
+                <div className="mb-10 sm:mb-12">
+                  <div className="text-white/40 text-[10px] sm:text-xs uppercase tracking-[0.3em] mb-4 font-bold">Project Investment</div>
+                  <div className="flex items-baseline gap-2 sm:gap-4">
+                    <span className="text-[3.5rem] sm:text-[6rem] font-bold text-white leading-none tracking-tighter">650</span>
+                    <span className="text-xl sm:text-3xl font-bold text-[#FF3B3B] uppercase">KWD</span>
                   </div>
-                  <div className="text-[#FF3B3B] text-xs mt-6 flex items-center gap-3 font-bold tracking-[0.2em] uppercase">
+                  <div className="text-[#FF3B3B] text-[9px] sm:text-xs mt-6 flex items-center gap-3 font-bold tracking-[0.2em] uppercase">
                     <div className="w-2 h-2 rounded-full bg-[#FF3B3B] animate-pulse" />
                     Zero Risk • Pay on Delivery
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6 mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-10 sm:mb-12">
                   {trustItems.map((item) => (
-                    <div key={item.label} className="p-6 rounded-3xl bg-white/[0.03] border border-white/5">
-                      <item.icon size={20} className="text-[#FF3B3B] mb-3 opacity-60" />
-                      <div className="text-white text-sm font-bold">{item.label}</div>
-                      <div className="text-white/30 text-[10px] uppercase tracking-widest mt-1 font-bold">{item.sub}</div>
+                    <div key={item.label} className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white/[0.03] border border-white/5">
+                      <item.icon size={18} className="text-[#FF3B3B] mb-2 sm:mb-3 opacity-60" />
+                      <div className="text-white text-xs sm:text-sm font-bold">{item.label}</div>
+                      <div className="text-white/30 text-[9px] sm:text-[10px] uppercase tracking-widest mt-1 font-bold">{item.sub}</div>
                     </div>
                   ))}
                 </div>
