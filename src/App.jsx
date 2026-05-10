@@ -118,7 +118,7 @@ function ProblemSolutionBlock({ title, number, problem, solution }) {
               <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
                 <AlertCircle size={20} className="text-white" />
               </div>
-              <span className="text-white text-xs font-bold tracking-widest uppercase">The Problem</span>
+              <span className="text-white text-xs font-bold tracking-widest uppercase">The Business Challenge</span>
             </div>
             <h2 className="text-2xl md:text-4xl font-bold text-white mb-8 tracking-tight">{title}</h2>
 
@@ -139,7 +139,7 @@ function ProblemSolutionBlock({ title, number, problem, solution }) {
                   <span className="text-white/40 text-[10px] font-bold tracking-widest uppercase mb-4 block">Business Impact</span>
                   <ul className="space-y-3">
                     {problem.impact.map((imp, i) => (
-                      <li key={i} className="text-white/60 text-base italic leading-relaxed">— {imp}</li>
+                      <li key={i} className="text-white/60 text-base italic leading-relaxed">• {imp}</li>
                     ))}
                   </ul>
                 </div>
@@ -154,10 +154,10 @@ function ProblemSolutionBlock({ title, number, problem, solution }) {
             <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center">
               <CheckCircle2 size={20} className="text-black" />
             </div>
-            <span className="text-black text-xs font-bold tracking-widest uppercase opacity-60">W3 Studio Solution</span>
+            <span className="text-black text-xs font-bold tracking-widest uppercase opacity-60">W3 Studio Strategic Solution</span>
           </div>
           <div className="space-y-6">
-            {solution.content.map((s, i) => <p key={i} className="text-black/80 text-lg font-medium leading-relaxed">{s}</p>)}
+            {solution.content && solution.content.map((s, i) => <p key={i} className="text-black/80 text-lg font-medium leading-relaxed">{s}</p>)}
             {solution.bullets && (
               <ul className="space-y-4">
                 {solution.bullets.map((b, i) => (
@@ -168,14 +168,15 @@ function ProblemSolutionBlock({ title, number, problem, solution }) {
                 ))}
               </ul>
             )}
+            {solution.contentAfter && solution.contentAfter.map((s, i) => <p key={i} className="text-black/80 text-lg font-medium leading-relaxed">{s}</p>)}
             {solution.outcome && (
               <div className="mt-10 pt-10 border-t border-black/10">
-                <span className="text-black/40 text-[10px] font-bold tracking-widest uppercase mb-4 block">Outcome</span>
-                <ul className="space-y-2">
+                <span className="text-black/40 text-[10px] font-bold tracking-widest uppercase mb-4 block">Expected Business Outcome</span>
+                <div className="space-y-4">
                   {solution.outcome.map((out, i) => (
-                    <li key={i} className="text-black text-base leading-relaxed">• {out}</li>
+                    <p key={i} className="text-black text-base leading-relaxed font-medium">{out}</p>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
           </div>
@@ -355,138 +356,289 @@ function App() {
         <section className="mb-40 space-y-12">
           <ProblemSolutionBlock
             number="01"
-            title="Outdated Brand Presentation"
+            title="Premium Manufacturing Quality Is Not Reflected Digitally"
             problem={{
               content: [
-                "The current website design feels outdated and does not visually represent the premium quality of Binnaji Group’s products and services.",
-                "The business manufactures premium products like luxury wedding cards, paper bags, and perfumes, but the digital experience fails to communicate this excellence."
+                "Binnaji Group operates across multiple premium manufacturing sectors including luxury wedding cards, industrial printing, perfumes, packaging, and metalwork. However, the current website does not communicate the scale, professionalism, or premium quality of the company.",
+                "For many visitors, the website becomes the first impression of the business. When the digital presence feels outdated, customers may unconsciously assume the company itself is less modern, smaller in scale, or less competitive than it actually is."
               ],
-              bullets: ["Premium paper bags", "Luxury wedding cards", "Corporate branding materials", "Industrial printing", "Perfumes", "Metalwork and molds"],
-              impact: ["The business is not actively modernized", "Operations feel smaller than they are", "Product quality may not match expectations"]
+              impact: [
+                "Premium products lose perceived value online",
+                "Corporate trust decreases before inquiry",
+                "The company appears smaller than its real manufacturing capability",
+                "International-level positioning is weakened",
+                "Customers may compare the brand against lower-market competitors"
+              ]
             }}
             solution={{
               content: [
-                "We will redesign the entire website with a premium modern visual identity and a clean luxury-focused design system inspired by international industrial groups."
+                "We will redesign the entire digital experience with a premium corporate identity focused on perception, trust, and authority.",
+                "The new platform will visually communicate:"
               ],
               bullets: [
-                "Professional layout structure",
-                "High-quality product presentation",
-                "Strong visual hierarchy",
-                "Corporate-style branding"
+                "Manufacturing strength",
+                "Legacy and professionalism",
+                "Product quality",
+                "Corporate-scale operations",
+                "International-standard branding"
               ],
-              outcome: ["Legacy & Scale", "Manufacturing capability", "Professionalism", "International presence"]
+              contentAfter: [
+                "The website will use a luxury-industrial design language inspired by modern global manufacturing brands while maintaining the identity of Binnaji Group."
+              ],
+              outcome: [
+                "The new digital presence will position Binnaji Group as a modern, large-scale, premium manufacturing group. Visitors will immediately understand the company’s credibility, professionalism, and production capability, creating stronger trust before the first conversation even begins."
+              ]
             }}
           />
 
           <ProblemSolutionBlock
             number="02"
-            title="Non-Responsive Mobile Experience"
+            title="Mobile Visitors Experience Friction & Trust Loss"
             problem={{
-              content: ["The current website is not properly responsive. Users need to zoom manually, content overflows horizontally, and navigation becomes difficult on phones."],
-              bullets: ["Manual zooming required", "Broken layouts on small screens", "Difficult touch navigation"]
+              content: [
+                "Today, most customers first interact with businesses through mobile devices. However, the current website experience on phones creates friction through broken layouts, difficult navigation, and manual zooming.",
+                "A poor mobile experience silently damages credibility and increases visitor drop-offs."
+              ],
+              impact: [
+                "Potential inquiries leave before exploring services",
+                "Trust decreases on first interaction",
+                "Lower engagement from modern users",
+                "Reduced visibility in Google mobile rankings"
+              ]
             }}
             solution={{
-              content: ["We will build the website using a modern mobile-first approach ensuring a perfect experience across all screen sizes."],
-              bullets: ["Smooth navigation on phones/tablets", "Improved readability", "Seamless user experience"],
-              outcome: ["Higher inquiry rates", "Better trust", "Higher Google rankings"]
+              content: [
+                "We will rebuild the entire platform using a modern mobile-first architecture designed for seamless experiences across all devices.",
+                "The new experience will prioritize:"
+              ],
+              bullets: [
+                "Smooth navigation",
+                "Clear readability",
+                "Fast interaction",
+                "Professional presentation on mobile and tablet"
+              ],
+              outcome: [
+                "The website will create a smooth, premium first impression for modern customers, increasing engagement, improving inquiry conversion, and strengthening customer confidence across all devices."
+              ]
             }}
           />
 
           <ProblemSolutionBlock
             number="03"
-            title="Website Security & SSL Issues"
+            title="Website Security Issues Reduce Corporate Credibility"
             problem={{
-              content: ["The website runs on HTTP instead of HTTPS. Browsers display a 'Not Secure' warning, which significantly damages corporate credibility."],
-              impact: ["Reduced customer trust", "Lower search engine rankings", "Inquiry confidence drop"]
+              content: [
+                "The current website displays security-related trust issues due to outdated HTTP infrastructure. Modern customers immediately associate “Not Secure” warnings with unprofessional or inactive businesses.",
+                "For a manufacturing group operating at scale, digital trust is critical."
+              ],
+              impact: [
+                "Reduced customer confidence",
+                "Lower credibility during first interaction",
+                "Negative perception of operational professionalism",
+                "Reduced visibility in search engines"
+              ]
             }}
             solution={{
-              content: ["We will implement full SSL security and optimized hosting configuration."],
-              bullets: ["Secure HTTPS setup", "Modern security standards", "SSL certification management"],
-              outcome: ["Professionally compliant", "Search engine optimized", "Trusted platform"]
+              content: [
+                "We will implement modern security infrastructure with full HTTPS protection, optimized hosting configuration, and secure platform standards.",
+                "This includes:"
+              ],
+              bullets: [
+                "SSL security implementation",
+                "Modern hosting standards",
+                "Secure inquiry handling",
+                "Long-term technical reliability"
+              ],
+              outcome: [
+                "The platform will communicate professionalism, reliability, and modern operational standards — helping customers feel confident interacting with the business online."
+              ]
             }}
           />
 
           <ProblemSolutionBlock
             number="04"
-            title="Lack of Strong Call-To-Actions"
+            title="Visitors Are Not Clearly Guided Toward Inquiry"
             problem={{
-              content: ["The current website lacks clear actions for visitors. Important triggers like WhatsApp communication, direct inquiry, and quote requests are missing or unclear."],
-              impact: ["Lost leads", "Reduced inquiries", "Missed opportunities"]
+              content: [
+                "The current website lacks strong conversion-focused communication pathways. Important customer actions such as WhatsApp inquiries, quote requests, and direct communication are either unclear or missing.",
+                "This creates friction between customer interest and actual business inquiries."
+              ],
+              impact: [
+                "Missed business opportunities",
+                "Lower inquiry conversion",
+                "Customers leaving without taking action",
+                "Reduced lead generation potential"
+              ]
             }}
             solution={{
-              content: ["We will strategically place direct contact triggers throughout the journey."],
-              bullets: ["WhatsApp inquiry buttons", "Call Now triggers", "Request Quote forms", "Sticky contact options"],
-              outcome: ["Immediate customer connection", "Higher conversion rates"]
+              content: [
+                "We will strategically design the user journey around conversion and customer interaction.",
+                "The platform will include:"
+              ],
+              bullets: [
+                "Direct WhatsApp communication triggers",
+                "Sticky inquiry actions",
+                "Quote request systems",
+                "Clear call-to-action placement throughout the website"
+              ],
+              outcome: [
+                "The website will actively encourage customer interaction, helping transform more visitors into real business inquiries and increasing overall conversion opportunities."
+              ]
             }}
           />
 
           <ProblemSolutionBlock
             number="05"
-            title="Confusing Navigation & User Flow"
+            title="Confusing Navigation Weakens Professional Perception"
             problem={{
-              content: ["Several pages and links are repetitive, incorrectly linked, or lead to wrong sections (e.g., Perfume links connected to wedding cards)."],
-              bullets: ["Zincograph links redirecting incorrectly", "Broken equipment pages", "Confusing menu items"]
+              content: [
+                "The current website structure contains inconsistent navigation, incorrect linking, and disconnected user journeys. This creates confusion and prevents visitors from properly understanding the company structure and services."
+              ],
+              impact: [
+                "Reduced customer confidence",
+                "Difficulty exploring services",
+                "Unclear understanding of business divisions",
+                "Lower perceived professionalism"
+              ]
             }}
             solution={{
-              content: ["We will create a fully structured information architecture for the entire group."],
-              bullets: ["Clear navigation hierarchy", "Organized subsidiary structure", "Easy service discovery"],
-              outcome: ["Smooth user journeys", "Logical product categorization", "Better understanding of company structure"]
+              content: [
+                "We will restructure the entire information architecture to create a clean, logical, and scalable corporate navigation system.",
+                "This includes:"
+              ],
+              bullets: [
+                "Organized subsidiary hierarchy",
+                "Clear service categorization",
+                "Structured user journeys",
+                "Simplified navigation flow"
+              ],
+              outcome: [
+                "Visitors will experience a clear and professional digital journey that improves understanding, strengthens trust, and reinforces the scale and organization of Binnaji Group."
+              ]
             }}
           />
 
           <ProblemSolutionBlock
             number="06"
-            title="Weak Showcase of Subsidiaries"
+            title="The Group’s Full Scale Is Not Properly Showcased"
             problem={{
-              content: ["Binnaji Group operates multiple specialized companies, but the current website doesn't show their true strengths or unified group scale."],
-              bullets: ["Al-Ratqa Factory", "Bin Naji Printing", "TNA Advertising", "Royal Card", "Zincograph Factory", "Bin Naji Perfumes"]
+              content: [
+                "Binnaji Group operates multiple specialized businesses, yet the current digital presence does not communicate the collective strength of the organization.",
+                "As a result, the market cannot fully perceive the true scale, capability, and diversity of the group."
+              ],
+              impact: [
+                "Reduced perception of manufacturing scale",
+                "Subsidiary strengths remain underrepresented",
+                "Lost opportunity for stronger group positioning"
+              ]
             }}
             solution={{
-              content: ["We will create a 'Mother Brand' corporate structure where each subsidiary maintains its identity while strengthening the group."],
-              bullets: ["Dedicated subsidiary sections", "Premium presentation", "Product showcases"],
-              outcome: ["Group strength visibility", "Manufacturing scale perception"]
+              content: [
+                "We will create a unified “Mother Brand” digital structure where each subsidiary maintains its own identity while contributing to a stronger overall corporate presence.",
+                "This will include:"
+              ],
+              bullets: [
+                "Dedicated subsidiary presentation",
+                "Unified corporate branding",
+                "Professional group structure",
+                "Premium product showcases"
+              ],
+              outcome: [
+                "The new platform will communicate the true strength and scale of Binnaji Group, positioning the company as a diversified and professionally organized industrial group."
+              ]
             }}
           />
 
           <ProblemSolutionBlock
             number="07"
-            title="Bilingual Experience Issues"
+            title="Inconsistent Bilingual Experience Damages Professionalism"
             problem={{
-              content: ["The current website uses translation-based switching that creates inconsistent layouts and mixed language elements (e.g., Arabic labels in English mode)."],
-              impact: ["UI inconsistencies", "Translation errors", "Professionalism drop"]
+              content: [
+                "The current multilingual experience creates layout inconsistencies and mixed-language elements that reduce clarity and professionalism for both Arabic and English users."
+              ],
+              impact: [
+                "Reduced user confidence",
+                "Inconsistent brand experience",
+                "Lower international presentation quality",
+                "Weak multilingual usability"
+              ]
             }}
             solution={{
-              content: ["We will develop a true bilingual system with native support for both English and Arabic RTL layouts."],
-              bullets: ["Proper Arabic RTL support", "Consistent English layouts", "Clean language switching"],
-              outcome: ["Professional multilingual presentation", "Better local/international experience"]
+              content: [
+                "We will develop a true bilingual platform with dedicated Arabic RTL support and professionally structured English layouts.",
+                "The experience will focus on:"
+              ],
+              bullets: [
+                "Native Arabic usability",
+                "Consistent bilingual presentation",
+                "Smooth language switching",
+                "Clean cross-language design systems"
+              ],
+              outcome: [
+                "The platform will provide a polished multilingual experience that reflects professionalism, improves accessibility, and strengthens both local and international brand perception."
+              ]
             }}
           />
 
           <ProblemSolutionBlock
             number="08"
-            title="Poor Product Presentation"
+            title="Products Lack Premium Digital Presentation"
             problem={{
-              content: ["Products currently lack clear information, use outdated imagery, and do not showcase quality properly, especially in Perfumes and Paper bags."],
-              impact: ["Reduced perceived value", "Lower customer confidence", "Weak brand positioning"]
+              content: [
+                "Many products currently lack the level of presentation required to communicate their actual quality and value. Outdated visuals and weak organization reduce the perceived premium nature of the products."
+              ],
+              impact: [
+                "Reduced perceived product value",
+                "Lower customer confidence",
+                "Weaker premium positioning",
+                "Missed conversion opportunities"
+              ]
             }}
             solution={{
-              content: ["We will create a modern Digital Showroom with high-quality visuals and specifications."],
-              bullets: ["High-quality visuals", "Product specifications", "Category organization"],
-              outcome: ["Digital Showroom experience", "Higher inquiry conversion"]
+              content: [
+                "We will create a modern digital showroom experience focused on premium visual presentation and organized product communication.",
+                "This includes:"
+              ],
+              bullets: [
+                "High-quality product visuals",
+                "Organized product categorization",
+                "Professional product presentation",
+                "Modern showcase layouts"
+              ],
+              outcome: [
+                "The website will elevate how customers perceive the company’s products, helping strengthen premium positioning and improve inquiry quality."
+              ]
             }}
           />
 
           <ProblemSolutionBlock
             number="09"
-            title="Technical Errors & Maintenance"
+            title="Technical Issues Create the Impression of an Inactive Business"
             problem={{
-              content: ["Several technical issues exist: registration errors, SMTP failures, broken links, and footer inconsistencies."],
-              impact: ["Negative brand impression", "Unreliable inquiry systems", "Perception of inactive business"]
+              content: [
+                "Existing technical errors, broken systems, and inconsistent functionality reduce trust and create the impression of an outdated or poorly maintained company."
+              ],
+              impact: [
+                "Negative first impressions",
+                "Reduced operational trust",
+                "Customer frustration",
+                "Inquiry reliability concerns"
+              ]
             }}
             solution={{
-              content: ["We will rebuild the platform using modern, stable development standards."],
-              bullets: ["Stable architecture", "Reliable inquiry systems", "Error-free routing"],
-              outcome: ["Professional reliability", "Optimized performance"]
+              content: [
+                "We will rebuild the platform using modern, stable, and scalable development standards focused on reliability and long-term maintainability.",
+                "This includes:"
+              ],
+              bullets: [
+                "Stable platform architecture",
+                "Reliable inquiry systems",
+                "Error-free navigation",
+                "Optimized website performance"
+              ],
+              outcome: [
+                "The platform will communicate operational reliability and modern professionalism, helping customers trust the business with greater confidence from the very first interaction."
+              ]
             }}
           />
         </section>
