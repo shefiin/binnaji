@@ -279,22 +279,27 @@ function App() {
         </section>
 
         {/* ── Overview ── */}
-        <section className="mb-40 max-w-[700px] mx-auto relative">
+        <section className="mb-40 max-w-[800px] mx-auto relative">
           <H1>Proposal Overview</H1>
-          <div className="mt-12 space-y-6">
-            {[
-              { l: 'Prepared For', v: 'Binnaji Group – Kuwait' },
-              { l: 'Contact Person', v: 'Shefin – Founder & Creative Director' },
-              { l: 'Email', v: 'shefinptr@gmail.com' },
-              { l: 'WhatsApp', v: '+91 8086564212' },
-              { l: 'Timeline', v: '6–8 Weeks' },
-            ].map((item) => (
-              <div key={item.l} className="flex justify-between border-b border-white/10 pb-4">
-                <span className="text-white/40 uppercase text-xs tracking-widest font-bold">{item.l}</span>
-                <span className="text-white font-medium">{item.v}</span>
+          <Reveal>
+            <div className="mt-12 p-8 md:p-12 rounded-[2.5rem] bg-white/[0.02] border border-white/5 backdrop-blur-md relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF3B3B]/5 rounded-full blur-[100px] -z-10 group-hover:bg-[#FF3B3B]/10 transition-colors duration-700" />
+              <div className="space-y-2">
+                {[
+                  { l: 'Prepared For', v: 'Binnaji Group – Kuwait' },
+                  { l: 'Contact Person', v: 'Shefin – Founder & Creative Director' },
+                  { l: 'Email', v: 'shefinptr@gmail.com' },
+                  { l: 'WhatsApp', v: '+91 8086564212' },
+                  { l: 'Timeline', v: '6–8 Weeks' },
+                ].map((item) => (
+                  <div key={item.l} className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/5 pb-4 pt-4 px-4 -mx-4 rounded-xl hover:bg-white/[0.03] transition-all">
+                    <span className="text-white/40 uppercase text-[10px] sm:text-xs tracking-[0.2em] font-bold mb-2 sm:mb-0">{item.l}</span>
+                    <span className="text-white font-medium text-sm sm:text-base">{item.v}</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          </Reveal>
         </section>
 
         <Divider />
