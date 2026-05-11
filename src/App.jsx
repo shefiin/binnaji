@@ -520,31 +520,39 @@ function App() {
 
           <ProblemSolutionBlock
             number="06"
-            title="The Group’s Full Scale Is Not Properly Showcased"
+            title="The Subsidiary Structure & Digital Experience Are Not Properly Organized"
             problem={{
               content: [
-                "Binnaji Group operates multiple specialized businesses, yet the current digital presence does not communicate the collective strength of the organization.",
-                "As a result, the market cannot fully perceive the true scale, capability, and diversity of the group."
+                "Binnaji Group operates multiple specialized subsidiaries, but the current digital experience does not clearly present each business under a unified and professional corporate structure.",
+                "Several subsidiary pages have unclear navigation, inconsistent presentation, and limited showcase quality, making it difficult for visitors to properly explore and understand each business division.",
+                "As a result, the overall strength, professionalism, and manufacturing capability of the group are not being communicated effectively."
               ],
               impact: [
-                "Reduced perception of manufacturing scale",
-                "Subsidiary strengths remain underrepresented",
-                "Lost opportunity for stronger group positioning"
+                "Confusing navigation between subsidiaries",
+                "Some subsidiary pages are not functioning clearly",
+                "Inconsistent digital experience across businesses",
+                "Quality and capabilities of each subsidiary are underrepresented",
+                "Reduced perception of overall group scale and professionalism",
+                "Lost opportunity for stronger corporate positioning"
               ]
             }}
             solution={{
               content: [
-                "We will create a unified “Mother Brand” digital structure where each subsidiary maintains its own identity while contributing to a stronger overall corporate presence.",
+                "We will build a unified “Mother Brand” digital platform for Binnaji Group, where each subsidiary will have its own dedicated webpage under a professionally structured corporate ecosystem.",
+                "This approach allows every business division to maintain its individual identity while strengthening the overall presence and credibility of Binnaji Group.",
                 "This will include:"
               ],
               bullets: [
-                "Dedicated subsidiary presentation",
-                "Unified corporate branding",
-                "Professional group structure",
-                "Premium product showcases"
+                "Dedicated webpages for each subsidiary",
+                "Unified mother brand presentation",
+                "Clear group structure & navigation",
+                "Premium product & manufacturing showcases",
+                "Consistent branding across all businesses",
+                "Centralized corporate positioning"
               ],
               outcome: [
-                "The new platform will communicate the true strength and scale of Binnaji Group, positioning the company as a diversified and professionally organized industrial group."
+                "The new platform will clearly communicate the full scale, structure, and industrial capabilities of Binnaji Group.",
+                "By professionally presenting all subsidiaries under one strong corporate identity, the company will build greater market trust, stronger brand authority, and a more premium perception among clients, partners, and investors."
               ]
             }}
           />
@@ -649,13 +657,13 @@ function App() {
             <div className="p-8 md:p-12 rounded-[2rem] border border-white/10 bg-white/[0.02] text-center backdrop-blur-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF3B3B]/10 rounded-full blur-[80px] -z-10 translate-x-1/2 -translate-y-1/2" />
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#0E9F6E]/10 rounded-full blur-[80px] -z-10 -translate-x-1/2 translate-y-1/2" />
-              
+
               <MessageCircle size={40} className="text-[#FF3B3B] mx-auto mb-6 opacity-80" />
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 tracking-tight">Your Vision, Our Blueprint</h2>
               <p className="text-white/70 text-[1.1rem] md:text-xl leading-relaxed mb-8 max-w-2xl mx-auto">
                 While our analysis covers the fundamental strategic improvements, we understand that Binnaji Group may have specific operational requirements, technical challenges, or unique business goals. We are fully open to discussing any concerns and tailoring this solution to perfectly align with your exact needs.
               </p>
-              
+
               <a
                 href="https://wa.me/918086564212?text=Hello%20Shefin%2C%20we%20have%20some%20additional%20requirements%20for%20the%20digital%20transformation."
                 target="_blank"
@@ -688,14 +696,23 @@ function App() {
           </div>
           <div>
             <H1>Proposed Features</H1>
-            <H2>Corporate & Business</H2>
+            <H2>Corporate & Business Structure</H2>
             <Bullets items={[
+              'Dedicated webpages for all subsidiaries',
+              'Unified Mother Brand architecture',
               'Modern premium UI/UX design',
-              'Fully responsive mobile-first',
+              'Fully responsive mobile-first experience',
               'Bilingual Arabic & English support',
-              'Product showcase system',
+              'Professional corporate group presentation'
+            ]} />
+            <H2>Product & Customer Experience</H2>
+            <Bullets items={[
+              'Premium product showcase system',
+              'Manufacturing capability presentation',
               'WhatsApp & Call integration',
-              'Admin content management'
+              'Inquiry & lead generation forms',
+              'Admin content management system',
+              'SEO-optimized page structure'
             ]} />
           </div>
         </section>
@@ -827,15 +844,6 @@ function App() {
                     <MessageCircle size={20} />
                     <span>Start via WhatsApp</span>
                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform opacity-50" />
-                  </motion.a>
-                  <motion.a
-                    href="mailto:shefinptr@gmail.com"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-center gap-4 w-full h-16 rounded-2xl border border-white/10 bg-white/5 text-white font-bold hover:bg-white/10 transition-all"
-                  >
-                    <Mail size={20} />
-                    <span>Email W3 Studio</span>
                   </motion.a>
                 </div>
               </motion.div>
